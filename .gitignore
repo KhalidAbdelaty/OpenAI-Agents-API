@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.vercel/
+
+runs/*
+!runs/20260930-194718/
