@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Northstar session replay</title>
+  <link rel="stylesheet" href="/vendor/rrweb-player/style.css">
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; background: #F7F7F5; color: #080808; }
+    header { display: flex; gap: 12px; align-items: center; padding: 14px 20px; background: #FFFFFF; border-bottom: 1px solid #E6E4DD; }
+    select, button { font: inherit; padding: 6px 10px; }
+    #status { color: #05192D; font-weight: 700; }
+    #player { display: flex; justify-content: center; padding: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Northstar session replay</strong>
+    <select id="pick"><option>Loading recordings...</option></select>
+    <button id="load" disabled>Play</button>
+    <span id="status"></span>
+  </header>
+  <div id="player"></div>
+  <script src="/vendor/rrweb-player/rrweb-player.min.js"></script>
+  <script src="replay.js"></script>
+</body>
+</html>

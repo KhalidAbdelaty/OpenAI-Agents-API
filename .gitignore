@@ -6,3 +6,5 @@ __pycache__/
 
 runs/*
 !runs/20260930-194718/
+node_modules/
+.env.local

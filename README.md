@@ -44,6 +44,15 @@ The hosted browser runs on OpenAI's servers, so it needs a URL it can reach over
 
 To use your own copy, deploy the `northstar/` folder to any static host so that `northstar/` is the site root, then pass its URL with `--staging-url` or type it in the Streamlit app. That host becomes the only allowed domain.
 
+## Watching the agent's browser
+
+The API returns a title for each browser action and only an occasional screenshot, so Northstar records itself. `northstar/rec.js` uses [rrweb](https://github.com/rrweb-io/rrweb) (self-hosted in `northstar/vendor/`) to record clicks, mouse movement, and page changes in whatever browser opens a build, including the OpenAI-hosted one. It sends the events to `/api/rec` on the same host, so the network allowlist still needs only one hostname. The footer tells visitors that page activity is recorded.
+
+- `northstar/api/rec.js` is a Vercel function that saves each batch to a private [Vercel Blob](https://vercel.com/docs/vercel-blob) store and returns a full recording on request.
+- `northstar/replay/` plays recordings back with rrweb-player. Open `/replay/` to pick one, or `/replay/?ids=<first>,<second>` to play two in a row.
+
+To record on your own copy, deploy `northstar/` to Vercel and connect a private Blob store to the project. On a host without functions, the store still works and the recorder simply stops sending.
+
 ## Run
 
 ```powershell
