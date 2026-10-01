@@ -5,6 +5,6 @@ __pycache__/
 .vercel/
 
 runs/*
-!runs/20260930-194718/
+!runs/20261001-162927/
 node_modules/
 .env.local

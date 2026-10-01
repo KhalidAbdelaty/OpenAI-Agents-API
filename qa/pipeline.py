@@ -165,7 +165,7 @@ class QATurn:
                            "release": self.build,
                            "evidence_id": f"ev-{self.label}-{action.call_id[-8:]}",
                            "evidence_item_id": self.last_shot}
-            self.result = judge(args)
+            self.result = judge(args, expected_build=self.build)
             yield self.rec("qa_record", label=self.label, record=self.record, result=self.result)
             reply.update(success=True, output=json.dumps({
                 "verdict": self.result["verdict"], "failed_checks": self.result["failed_checks"],

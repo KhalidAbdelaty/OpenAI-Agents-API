@@ -12,7 +12,7 @@
   let buffer = [];
   let seq = 0;
 
-  record({ emit: (event) => buffer.push(event) });
+  record({ emit: (event) => buffer.push(event), maskAllInputs: true });
 
   function flush() {
     if (buffer.length === 0) return;

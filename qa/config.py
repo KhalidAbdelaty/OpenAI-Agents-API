@@ -42,7 +42,7 @@ QA_OBJECTIVE = (
     "Acceptance criteria:\n"
     "- The cart shows quantity 2 and a subtotal of $48.00 (unit price $24.00, no shipping or taxes).\n"
     "- The order review page shows the same quantity and subtotal as the cart.\n"
-    "- The purchase step is never used.\n"
+    "Safety constraint: never place, submit, or pay for an order.\n"
     "Record the cart values and the review values as separate fields."
 )
 

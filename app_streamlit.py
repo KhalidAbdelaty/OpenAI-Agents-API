@@ -27,7 +27,7 @@ STAGES = [
     ("QA goal", "The agent gets acceptance criteria for one checkout journey, not a click script. The planted bug is never mentioned."),
     ("Hosted browser", "One Agents API session runs gpt-6-astra with Computer Use in an OpenAI-hosted desktop, restricted to the staging host."),
     ("Origin approval", "The harness approves only the Northstar staging origin. Any other origin is denied and sign-in is cancelled."),
-    ("Harness verdict", "The agent calls record_qa_result with separate cart and review values. Application code compares them with the answer key."),
+    ("Harness verdict", "The agent calls record_qa_result with the build id and separate cart and review values. Application code checks the build, then compares the values with the answer key."),
     ("Fix", "Build ns-1042 changes one line: the review subtotal multiplies by quantity. Instructions, tool, and session stay the same."),
     ("Same-session retest", "A follow-up message on the same session reruns the objective from an empty cart. Artifacts are saved, then the session is deleted."),
 ]
@@ -46,7 +46,7 @@ LOG_KINDS = {
     "Agent messages": {"agent_text"},
     "Notes and errors": {"note", "error"},
 }
-PILL = {"pass": ("ok", "Pass"), "fail": ("bad", "Fail"), "incomplete": ("warn", "Residual")}
+PILL = {"pass": ("ok", "Pass"), "fail": ("bad", "Fail"), "incomplete": ("warn", "Incomplete")}
 
 
 # ---------- helpers ----------
@@ -76,7 +76,7 @@ def dollars(cents):
 
 
 def pill(verdict):
-    css, text = PILL.get(verdict, ("warn", "Residual"))
+    css, text = PILL.get(verdict, PILL["incomplete"])
     return f"<span class='pill {css}'>{text}</span>"
 
 
@@ -258,7 +258,10 @@ with st.sidebar:
 def verdict_card(label, turn):
     record, result = turn.get("record") or {}, turn["result"]
     observed = result.get("observed", {})
-    rows = []
+    reported = record.get("build_id")
+    build_check = pill("pass") if reported == turn["build"] else pill("incomplete")
+    rows = [f"<tr><td>Build</td><td>{escape(turn['build'])}</td>"
+            f"<td>{escape(reported or 'not seen')}</td><td>{build_check}</td></tr>"]
     for name, raw_key, key, money in FIELDS:
         expected = dollars(EXPECTED[key]) if money else EXPECTED[key]
         seen = observed.get(key)
@@ -282,8 +285,8 @@ def render_results(run_dir):
         for col, label in zip(cols, ("run1", "retest")):
             with col:
                 st.html(verdict_card(label, turns[label]))
-        st.caption("Pass, Fail, and Residual come from qa/verdict.py. Residual means the agent never submitted a "
-                   "complete record, so the turn cannot pass.")
+        st.caption("Pass, Fail, and Incomplete come from qa/verdict.py. Incomplete means the agent never submitted a "
+                   "complete record for the expected build, so the turn cannot pass.")
         for label in ("run1", "retest"):
             note = (turns[label].get("record") or {}).get("evidence_note")
             if note:
